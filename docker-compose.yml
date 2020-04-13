@@ -16,7 +16,7 @@ services:
       - USERDB_IDS_PASSWORD=xxx
       - USERDB_IDS_IPS_WHITELIST=10.107.99.188
     ports:
-      - "80:80"
+      - "10107:80"
     volumes:
       - .:/opt/userdb
     links:
@@ -25,7 +25,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - "8080:80"
+      - "10108:80"
     links:
       - db
     environment:
