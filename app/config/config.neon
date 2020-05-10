@@ -12,6 +12,12 @@ parameters:
 	salt: %env.USERDB_SALT%
 	debug:
 		fakeUser: false
+	ipv4AddressWhitelist:
+		- 10.107.0.0/16
+		- 10.207.0.0/16
+		- 89.248.240.0/20
+	ipv6PrefixWhitelist:
+		- 2a01:168::/29
 
 php:
 	date.timezone: Europe/Prague
@@ -81,7 +87,7 @@ services:
 	SpravaPresenter:
 		class: App\Presenters\SpravaPresenter
 		setup:
-			- setGoogleMapsApiKey(%env.USERDB_GOOGLE_MAPS_KEY%)
+			- setGoogleMapsApiKey("xxx0")
 
 console:
 	commands:
