@@ -1,31 +1,28 @@
 version: '3'
 services:
   web:
-    build: .
-    environment:
-      - TRACY_ENABLE=1
-      - USERDB_SALT=saltvalue
-      - USERDB_GOOGLE_MAPS_KEY=xxx
-      - USERDB_DB_HOST=db
-      - USERDB_DB_NAME=userdb
-      - USERDB_DB_USERNAME=root
-      - USERDB_DB_PASSWORD=rootpwd654
-      # generate USERDB_ENCRYPTION_PASSPHRASE like this: $ vendor/bin/generate-defuse-key
-      - USERDB_ENCRYPTION_PASSPHRASE=def000003f80fda926649189d52b4024641f8fa97d1be88638aa8f8c0bec00fdfd756e344f7547db517b17a5ea67085d9de8c88c806795bdec825f8df8b47e6dbb87ec03
-      - USERDB_IDS_USERNAME=api
-      - USERDB_IDS_PASSWORD=xxx
-      - USERDB_IDS_IPS_WHITELIST=10.107.99.188
-      - INFLUX_URL=influxdb://wewimo:xxx@10.107.252.101:8086/wewimo
+    image: nginx
+    volumes: 
+      - "./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf"  
+      - "./docker/ssl:/etc/ssl"
+      - "./src:/var/www/html"
+      - "./nginx/default.template.conf:/etc/nginx/conf.d/default.template"
+      - "./etc/nginx/default.template.conf:/etc/nginx/conf.d/default.template"
     ports:
-      - "80:80"
-    volumes:
-      - .:/opt/userdb
-    links:
+      - "8000:80"
+      - "3000:443" 
+    env_file:
+      - ".env"
+    command: /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    restart: always
+    depends_on:
+      - php
       - db
-       
-      
-         
-
+  php:
+    image: userdb_php:${PHP_TAG}
+    restart: always
+    env_file:
+      - ".env"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:

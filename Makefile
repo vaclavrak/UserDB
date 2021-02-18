@@ -25,8 +25,7 @@ mysql-restore:
 
 
 build-php:
-	@docker build -f Dockerfile.php . -t userdb_php:local
-
+	@docker build -f Dockerfile.php . -t userdb_php:$(shell git log -1 --format=%h)
 
 restart-app:
 	@docker-compose stop
