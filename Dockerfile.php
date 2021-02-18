@@ -16,14 +16,14 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
 
 RUN echo "<?php header('Location: /userdb/'); " > /var/www/html/index.php #"
 
-RUN mkdir -p /opt/userdb/vendor
+RUN mkdir -p /opt/userdb/{vendor,log,temp}
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 WORKDIR /opt/userdb
 
-COPY composer.json /opt/userdb/
-COPY composer.lock /opt/userdb/
+COPY src/composer.json /opt/userdb/
+COPY src/composer.lock /opt/userdb/
 
 RUN composer install
 
@@ -36,8 +36,12 @@ RUN echo "" > /opt/userdb/app/config/config.local.neon
 # copy application (bind volume to the path during development in order to override the baked-in app version)
 COPY src/ /opt/userdb
 
+RUN mkdir -p /opt/userdb/{vendor,log,temp}
+
 # make some dirs writable by apache httpd
-RUN chmod 777 -R /opt/userdb/log && \
+
+RUN mkdir -p /opt/userdb/log && \
+    chmod 777 -R /opt/userdb/log && \
     chmod 777 -R /opt/userdb/temp && \
     chmod 777 -R /opt/userdb/vendor/mpdf/mpdf/tmp
 
