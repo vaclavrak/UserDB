@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   web:
     build: .
@@ -22,10 +22,7 @@ services:
       - .:/opt/userdb
     links:
       - db
-       
-      
-         
-
+    network_mode: "bridge"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
@@ -34,26 +31,17 @@ services:
       - db
     environment:
       PMA_HOST: db
-    depends_on:
-      - db
+    network_mode: "bridge"
   db:
     image: mariadb:10.1
-    restart: always
-    env_file:
-      - ".env" 
     ports:
       - "3306:3306"
-    command: --max_allowed_packet=32505856    
+    command: --max_allowed_packet=32505856      # Set max_allowed_packet to 256M (or any other value)
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    
-   
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
-
+      MYSQL_ROOT_PASSWORD: rootpwd654
+      MYSQL_DATABASE: userdb
+    network_mode: "bridge"
+#networks:
+#  default:
+#    external:
+#      name: bridge
