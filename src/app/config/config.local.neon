@@ -1,0 +1,18 @@
+# DEVELOPEMENT
+parameters:
+	https: false
+	debug:
+		tracy: true
+		fakeUser:
+			userID: 1
+			userName: 'tester'
+			passwordHash: 'xxx'    # optional; mandatory for SMS sending; use crypt(plainPassword, salt)
+	igw1IpCheckerUrl: http://localhost/
+	igw2IpCheckerUrl: http://localhost/
+
+# Many options moved to environment variables.
+# These are defined in `docker-compose.yml` for development deployment.
+# Use `docker-compose.override.yml` to override them when necessary.
+
+# PRODUCTION
+# empty

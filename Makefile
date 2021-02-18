@@ -15,6 +15,7 @@ help:
 	@echo "Commands:"
 	@echo "  mysql-restore       Restore backup of all databases"
 	@echo "  build-php           Build PHP image" 
+	@echo "  restart-app         Full restart docker-compose and reinit DB" 
 
 
 mysql-restore:	
